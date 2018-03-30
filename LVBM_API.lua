@@ -426,7 +426,7 @@ LVBM_SavedVars = {
 
 LVBM = {}
 
-LVBM.Version = "2.00";
+LVBM.Version = "2.01";
 
 LVBM.Bosses = {
 }
@@ -543,9 +543,9 @@ LVBM.Options = {
 	["FlashEnabled"] = true,
 	["FlashColor"] = "red",
 	["SpecialWarningTextColor"] = {
-		["r"] = 0.0,
-		["g"] = 0.0,
-		["b"] = 1.0,
+		["r"] = 1.0,
+		["g"] = 0.93,
+		["b"] = 0.82,
 		["a"] = 1.0,
 	},
 	["FirstTimeLoaded191"] = true,
@@ -1065,27 +1065,32 @@ function LVBM.OnEvent(event, arg1)
 		LVBM.AutoAttack = false;
 	elseif (event == "PLAYER_REGEN_DISABLED") then
 		if LVBM.Bosses[GetRealZoneText()] and not LVBM.InCombat then
+			ChatFrame2:AddMessage('[LV] PLAYER_REGEN_DISABLED', 169/255, 219/255, 255/255)
 			local bossTable = {};
-			local bosses = {};
+			local bossesTable = {};
 			
 			for index, value in pairs(LVBM.Bosses[GetRealZoneText()]) do
 				if value.startMethod == "COMBAT" then
 					bossTable[value.name] = {["index"] = index, ["value"] = value};
-					table.insert(bosses, value.name);
+					--ChatFrame2:AddMessage('[LV] adding ' .. value.name, 169/255, 219/255, 255/255)
+					table.insert(bossesTable, value.name);
 				end
 			end
-			bosses = LVBM.UnitExists(bosses);
+			bosses = LVBM.UnitExists(bossesTable);
 			if bosses then
+				ChatFrame2:AddMessage('[LV] bosses is set to TRUE', 169/255, 219/255, 255/255)
 				for index, value in pairs(bosses) do
-					if value then
+					ChatFrame2:AddMessage('[LV] Checking for ' ..tostring(bossTable[index].index)..' in '..(bossTable[index].value.delay or 5), 169/255, 219/255, 255/255)
+					--if value then
 						LVBM.Schedule((bossTable[index].value.delay or 5), 	function(bossID)							
 							if LVBM.Bosses[GetRealZoneText()] and LVBM.Bosses[GetRealZoneText()][bossID] then
 								if LVBM.DetectCombat(LVBM.Bosses[GetRealZoneText()][bossID].name) then
+									ChatFrame2:AddMessage('[LV] Combat detected with ' ..tostring(LVBM.Bosses[GetRealZoneText()][bossID].name), 169/255, 219/255, 255/255)
 									LVBM.CombatStart(bossID, (LVBM.Bosses[GetRealZoneText()][bossID].delay or 5));
 								end
 							end
 						end, bossTable[index].index);
-					end
+					--end
 				end
 			end
 		end

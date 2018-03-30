@@ -253,7 +253,7 @@ LVBM.Bosses[LVBM_AQ40] = {
 		["OURO"] = {
 			["startMethod"] = "COMBAT",
 			["name"] = LVBM_OURO_NAME,
-			["delay"] = 35,
+			["delay"] = 10,
 			["BossMods"] = {
 				"Ouro",
 			},
